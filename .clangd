@@ -51,6 +51,26 @@ Diagnostics:
       - fuchsia-*
       - fuchsia-trailing-return
       - google-*
+      - google-build-explicit-make-pair
+      - google-build-namespaces
+      - google-build-using-namespace
+      - google-default-arguments
+      - google-explicit-constructor
+      - google-global-names-in-headers
+      - google-objc-avoid-nsobject-new
+      - google-objc-avoid-throwing-exception
+      - google-objc-function-naming
+      - google-objc-global-variable-declaration
+      - google-readability-avoid-underscore-in-googletest-name
+      - google-readability-braces-around-statements
+      - google-readability-casting
+      - google-readability-function-size
+      - google-readability-namespace-comments
+      - google-readability-todo
+      - google-runtime-float
+      - google-runtime-int
+      - google-runtime-operator
+      - google-upgrade-googletest-case
       - hicpp-*
       - linuxkernel-must-check-errs
       - llvm-*
@@ -58,4 +78,6 @@ Diagnostics:
       - mpi-*
       - openmp-*
       - portability-*
+      - readability-identifier-length
+      - readability-isolate-declaration
       - zircon-*

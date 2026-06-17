@@ -1,5 +1,5 @@
-#include <curses.h>
 #include <chrono>
+#include <curses.h>
 #include <string>
 #include <thread>
 #include <vector>
@@ -13,12 +13,14 @@ using std::to_string;
 
 // 50 bars uniformly displayed from 0 - 100 %
 // 2% is one bar(|)
-std::string NCursesDisplay::ProgressBar(float percent) {
+std::string NCursesDisplay::ProgressBar(float percent)
+{
   std::string result{"0%"};
   int size{50};
   float bars{percent * size};
 
-  for (int i{0}; i < size; ++i) {
+  for (int i{0}; i < size; ++i)
+  {
     result += i <= bars ? '|' : ' ';
   }
 
@@ -28,9 +30,11 @@ std::string NCursesDisplay::ProgressBar(float percent) {
   return result + " " + display + "/100%";
 }
 
-void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
+void NCursesDisplay::DisplaySystem(System &system, WINDOW *window)
+{
   int row{0};
-  mvwprintw(window, ++row, 2, "%s", ("OS: " + system.OperatingSystem()).c_str());
+  mvwprintw(window, ++row, 2, "%s",
+            ("OS: " + system.OperatingSystem()).c_str());
   mvwprintw(window, ++row, 2, "%s", ("Kernel: " + system.Kernel()).c_str());
   mvwprintw(window, ++row, 2, "CPU: ");
   wattron(window, COLOR_PAIR(1));
@@ -52,8 +56,9 @@ void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
   wrefresh(window);
 }
 
-void NCursesDisplay::DisplayProcesses(std::vector<Process>& processes,
-                                      WINDOW* window, int n) {
+void NCursesDisplay::DisplayProcesses(std::vector<Process> &processes,
+                                      WINDOW *window, int n)
+{
   int row{0};
   int const pid_column{2};
   int const user_column{9};
@@ -69,20 +74,24 @@ void NCursesDisplay::DisplayProcesses(std::vector<Process>& processes,
   mvwprintw(window, row, time_column, "TIME+");
   mvwprintw(window, row, command_column, "COMMAND");
   wattroff(window, COLOR_PAIR(2));
-  for (int i = 0; i < n; ++i) {
-    //You need to take care of the fact that the cpu utilization has already been multiplied by 100.
-    // Clear the line.
-    // Use the getmaxx()/getmaxy() accessors instead of poking window->_maxx
-    // directly: WINDOW is an opaque type on this ncurses build, so its members
-    // aren't accessible. See man 3x ncurses:
-    // https://man7.org/linux/man-pages/man3/ncurses.3x.html
+  for (int i = 0; i < n; ++i)
+  {
+    // You need to take care of the fact that the cpu utilization has already
+    // been multiplied by 100.
+    //  Clear the line.
+    //  Use the getmaxx()/getmaxy() accessors instead of poking window->_maxx
+    //  directly: WINDOW is an opaque type on this ncurses build, so its members
+    //  aren't accessible. See man 3x ncurses:
+    //  https://man7.org/linux/man-pages/man3/ncurses.3x.html
     mvwprintw(window, ++row, pid_column,
               (string(getmaxx(window) - 2, ' ').c_str()));
-    
-    mvwprintw(window, row, pid_column, "%s", to_string(processes[i].Pid()).c_str());
+
+    mvwprintw(window, row, pid_column, "%s",
+              to_string(processes[i].Pid()).c_str());
     mvwprintw(window, row, user_column, "%s", processes[i].User().c_str());
     float cpu = processes[i].CpuUtilization() * 100;
-    mvwprintw(window, row, cpu_column, "%s", to_string(cpu).substr(0, 4).c_str());
+    mvwprintw(window, row, cpu_column, "%s",
+              to_string(cpu).substr(0, 4).c_str());
     mvwprintw(window, row, ram_column, "%s", processes[i].Ram().c_str());
     mvwprintw(window, row, time_column, "%s",
               Format::ElapsedTime(processes[i].UpTime()).c_str());
@@ -91,20 +100,22 @@ void NCursesDisplay::DisplayProcesses(std::vector<Process>& processes,
   }
 }
 
-void NCursesDisplay::Display(System& system, int n) {
-  initscr();      // start ncurses
-  noecho();       // do not print input values
-  cbreak();       // terminate ncurses on ctrl + c
-  start_color();  // enable color
+void NCursesDisplay::Display(System &system, int n)
+{
+  initscr();     // start ncurses
+  noecho();      // do not print input values
+  cbreak();      // terminate ncurses on ctrl + c
+  start_color(); // enable color
 
   int x_max{getmaxx(stdscr)};
-  WINDOW* system_window = newwin(9, x_max - 1, 0, 0);
+  WINDOW *system_window = newwin(9, x_max - 1, 0, 0);
   // getmaxy() accessor rather than system_window->_maxy: WINDOW is opaque here.
   // https://man7.org/linux/man-pages/man3/ncurses.3x.html
-  WINDOW* process_window =
+  WINDOW *process_window =
       newwin(3 + n, x_max - 1, getmaxy(system_window) + 1, 0);
 
-  while (1) {
+  while (1)
+  {
     init_pair(1, COLOR_BLUE, COLOR_BLACK);
     init_pair(2, COLOR_GREEN, COLOR_BLACK);
     box(system_window, 0, 0);

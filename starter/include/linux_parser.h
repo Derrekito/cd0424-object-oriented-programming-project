@@ -5,7 +5,10 @@
 #include <regex>
 #include <string>
 
-namespace LinuxParser {
+// This looks like helper functions in a namespace to extract specific data
+
+namespace LinuxParser
+{
 // Paths
 const std::string kProcDirectory{"/proc/"};
 const std::string kCmdlineFilename{"/cmdline"};
@@ -28,7 +31,8 @@ std::string OperatingSystem();
 std::string Kernel();
 
 // CPU
-enum CPUStates {
+enum CPUStates
+{
   kUser_ = 0,
   kNice_,
   kSystem_,
@@ -40,18 +44,26 @@ enum CPUStates {
   kGuest_,
   kGuestNice_
 };
-std::vector<std::string> CpuUtilization();
+
+// going crazy keeping these columns straight. Using a human readable struct.
+struct CpuTime
+{
+  long user = 0, nice = 0, system = 0, idle = 0, iowait = 0, irq = 0,
+       softirq = 0, steal = 0, guest = 0, guest_nice = 0;
+};
+
+CpuTime CpuUtilization();
 long Jiffies();
 long ActiveJiffies();
-long ActiveJiffies(int pid);
 long IdleJiffies();
 
 // Processes
+long ActiveJiffies(int pid);
 std::string Command(int pid);
 std::string Ram(int pid);
 std::string Uid(int pid);
 std::string User(int pid);
 long int UpTime(int pid);
-};  // namespace LinuxParser
+}; // namespace LinuxParser
 
 #endif
